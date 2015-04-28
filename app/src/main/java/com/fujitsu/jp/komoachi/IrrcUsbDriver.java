@@ -50,7 +50,6 @@ public class IrrcUsbDriver implements UsbReceiver.Driver, RemoconConst {
 	private UsbEndpoint endpointIn;
 	private UsbEndpoint endpointOut;
 
-    private static MainActivity activity;
 
 	/**
 	 * IRリモコンの応答を受け取るリスナ。
@@ -60,7 +59,6 @@ public class IrrcUsbDriver implements UsbReceiver.Driver, RemoconConst {
 	}
 
 	public static IrrcUsbDriver init(Activity activity, String permissionName) {
-        activity = activity;
 		IrrcUsbDriver driver = new IrrcUsbDriver(activity, permissionName);
 		// USB_DEVICE_ATTACHEDから起動された場合は intent がデバイスを持っている。
 		UsbDevice device = activity.getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
@@ -295,6 +293,8 @@ public class IrrcUsbDriver implements UsbReceiver.Driver, RemoconConst {
                     if (runningTime > timeout) {
                         cancel();
                         errorMessage = "timeout";
+                        byte[] hoge = "hoge".getBytes();
+                        return hoge;
                     }
 					if (isCancelled()) break;
 					doRequest(reqData);
@@ -342,8 +342,8 @@ public class IrrcUsbDriver implements UsbReceiver.Driver, RemoconConst {
 		 * @throws java.io.IOException
 		 */
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-        private void doRequest(byte[] buff) throws IOException {
-			Log.d(TAG, "request:" + dump(buff));
+            private void doRequest(byte[] buff) throws IOException {
+                Log.d(TAG, "request:" + dump(buff));
 
 			ByteBuffer buffer = ByteBuffer.allocate(buff.length);
 			UsbRequest request = new UsbRequest();
@@ -391,7 +391,6 @@ public class IrrcUsbDriver implements UsbReceiver.Driver, RemoconConst {
 			Log.d(TAG, "response:" + dump(buff));
 			request.close();
 			this.currentUsbRequest = null;
-            activity.info("");
 			return buff;
 		}
 

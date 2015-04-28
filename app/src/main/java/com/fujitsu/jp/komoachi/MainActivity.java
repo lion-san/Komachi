@@ -71,10 +71,14 @@ public class MainActivity extends ActionBarActivity
                 info(data.toString());
             }
         };
-        if(irrcUsbDriver.isReady())
-          irrcUsbDriver.startReceiveIr(listener);
-        else
+        if(irrcUsbDriver.isReady()) {
+            info("USBデバイスを認識");
+            irrcUsbDriver.getReceiveIrData(listener, 10000);
+        }
+        else {
+            info("USBデバイスが見つかりません");
             errorDialog("USB Device cannot find.");
+        }
 
 
 }
