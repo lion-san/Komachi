@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity
@@ -66,7 +67,8 @@ public class MainActivity extends ActionBarActivity
         IrrcUsbDriver.IrrcResponseListener listener = new IrrcUsbDriver.IrrcResponseListener() {
             @Override
             public void onIrrcResponse(byte[] data) {
-                errorDialog(data.toString());
+                info("データ受信？");
+                info(data.toString());
             }
         };
         if(irrcUsbDriver.isReady())
@@ -145,6 +147,10 @@ public class MainActivity extends ActionBarActivity
         dialog.setTitle(title);
         dialog.setMessage(message);
         dialog.show();
+    }
+
+    public void info(String message){
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     /**
