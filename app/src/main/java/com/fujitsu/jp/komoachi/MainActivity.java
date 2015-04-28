@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, UsbReceiver.UsbReceiverActivity, RemoconConst {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -31,6 +31,13 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    /**
+     *
+     * User constraint value
+     */
+    private IrrcUsbDriver irrcUsbDriver;
+    private UsbReceiver usbReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,10 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //RemoconApp
+        //irrcUsbDriver = ((RemoconApplication) getApplication()).getIrrcUsbDriver(this);
+        //usbReceiver = UsbReceiver.init(this, irrcUsbDriver);
     }
 
     @Override
@@ -104,6 +115,11 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void errorDialog(String message) {
+
     }
 
     /**
