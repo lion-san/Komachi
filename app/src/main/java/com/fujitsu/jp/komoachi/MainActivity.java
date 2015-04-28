@@ -64,16 +64,21 @@ public class MainActivity extends ActionBarActivity
         usbReceiver =  UsbReceiver.init(this, irrcUsbDriver);
 
         //受信モードで待機
-        IrrcUsbDriver.IrrcResponseListener listener = new IrrcUsbDriver.IrrcResponseListener() {
-            @Override
-            public void onIrrcResponse(byte[] data) {
-                info("データ受信？");
-                info(data.toString());
-            }
-        };
         if(irrcUsbDriver.isReady()) {
             info("USBデバイスを認識");
-            irrcUsbDriver.getReceiveIrData(listener, 10000);
+
+            irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
+                @Override
+                public void onIrrcResponse(byte[] data) {
+                    irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
+                        @Override
+                        public void onIrrcResponse(byte[] data) {
+                            info(data.toString());
+                            irrcUsbDriver.endReceiveIr(null);
+                        }
+                    }, 5000);
+                }
+            });
         }
         else {
             info("USBデバイスが見つかりません");
