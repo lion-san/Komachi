@@ -1,6 +1,7 @@
 package com.fujitsu.jp.komoachi;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -56,7 +57,25 @@ public class MainActivity extends ActionBarActivity
         //RemoconApp
         //irrcUsbDriver = ((RemoconApplication) getApplication()).getIrrcUsbDriver(this);
         //usbReceiver = UsbReceiver.init(this, irrcUsbDriver);
-    }
+
+        //USB接続解除
+        irrcUsbDriver = IrrcUsbDriver.init(this, ACTION_USB_PERMISSION);
+        usbReceiver =  UsbReceiver.init(this, irrcUsbDriver);
+
+        //受信モードで待機
+        IrrcUsbDriver.IrrcResponseListener listener = new IrrcUsbDriver.IrrcResponseListener() {
+            @Override
+            public void onIrrcResponse(byte[] data) {
+                errorDialog(data.toString());
+            }
+        };
+        if(irrcUsbDriver.isReady())
+          irrcUsbDriver.startReceiveIr(listener);
+        else
+            errorDialog("USB Device cannot find.");
+
+
+}
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -119,7 +138,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void errorDialog(String message) {
-
+        alertDalog("Error!",message);
+    }
+    private void alertDalog(String title, String message) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.show();
     }
 
     /**
