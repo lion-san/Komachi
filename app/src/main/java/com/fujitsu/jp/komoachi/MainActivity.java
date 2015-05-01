@@ -2,27 +2,25 @@ package com.fujitsu.jp.komoachi;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, UsbReceiver.UsbReceiverActivity, RemoconConst {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, UsbReceiver.UsbReceiverActivity, RemoconConst,
+        WebViewFragment.OnFragmentInteractionListener
+{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -55,9 +53,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        //RemoconApp
-        //irrcUsbDriver = ((RemoconApplication) getApplication()).getIrrcUsbDriver(this);
-        //usbReceiver = UsbReceiver.init(this, irrcUsbDriver);
+
 
         //USB接続解除
         irrcUsbDriver = IrrcUsbDriver.init(this, ACTION_USB_PERMISSION);
@@ -92,9 +88,17 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+
+        if(position == 0){
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, WebViewFragment.newInstance("file:///android_asset/index.html"))
+                    .commit();
+        }
+        else {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                    .commit();
+        }
     }
 
     public void onSectionAttached(int number) {
@@ -160,6 +164,11 @@ public class MainActivity extends ActionBarActivity
 
     public void info(String message){
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**
