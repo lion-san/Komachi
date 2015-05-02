@@ -19,11 +19,13 @@ import android.webkit.WebView;
  * Use the {@link WebViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WebViewFragment extends Fragment {
+public class WebViewFragment extends Fragment implements RemoconConst {
     private OnFragmentInteractionListener mListener;
 
     private static final String ARG_PARAM_URL = "url";
     private String url;
+
+    private IrrcUsbDriver irrcUsbDriver;
 
     /**
      * Use this factory method to create a new instance of
@@ -32,10 +34,12 @@ public class WebViewFragment extends Fragment {
      * @return A new instance of fragment WebViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WebViewFragment newInstance( String url) {
+    public static WebViewFragment newInstance( String url, IrrcUsbDriver driver)  {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_URL, url);
+
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,6 +54,10 @@ public class WebViewFragment extends Fragment {
 
         if (getArguments() != null) {
             url = getArguments().getString(ARG_PARAM_URL);
+
+            //Driver作成
+            irrcUsbDriver = IrrcUsbDriver.init(getActivity(), ACTION_USB_PERMISSION);
+
         }
     }
 
@@ -69,7 +77,7 @@ public class WebViewFragment extends Fragment {
         wb.getSettings().setJavaScriptEnabled(true);
 
         //Javascript Interface add
-        wb.addJavascriptInterface(new WebViewJavascriptInterface(getActivity()), "Android");
+        wb.addJavascriptInterface(new WebViewJavascriptInterface(getActivity(), irrcUsbDriver), "Android");
 
         //Load
         wb.loadUrl(url);

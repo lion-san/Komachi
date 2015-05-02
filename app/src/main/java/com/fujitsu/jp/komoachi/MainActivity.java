@@ -91,7 +91,7 @@ public class MainActivity extends ActionBarActivity
 
         if(position == 0){
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, WebViewFragment.newInstance("file:///android_asset/index.html"))
+                    .replace(R.id.container, WebViewFragment.newInstance("file:///android_asset/index.html", irrcUsbDriver))
                     .commit();
         }
         else {
@@ -141,11 +141,24 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }*/
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                Toast.makeText(this, "リモコンの初期設定を開始します", Toast.LENGTH_LONG).show();
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, WebViewFragment.newInstance("file:///android_asset/setting.html", irrcUsbDriver))
+                        .commit();
+                break;
+
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
