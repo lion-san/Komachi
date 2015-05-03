@@ -1,4 +1,4 @@
-package com.fujitsu.jp.komoachi;
+package com.fujitsu.jp.komachi;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;

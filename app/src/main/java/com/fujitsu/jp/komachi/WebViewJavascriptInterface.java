@@ -1,5 +1,6 @@
-package com.fujitsu.jp.komoachi;
+package com.fujitsu.jp.komachi;
 
+import android.app.Activity;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
@@ -33,35 +34,44 @@ public class WebViewJavascriptInterface {
 
         Toast.makeText(mContext, "リモコンの設定を開始します", Toast.LENGTH_SHORT).show();
 
+        //赤外線の受信モードON
+        //受信モードで待機
+        if(irrcUsbDriver.isReady()) {
+            Toast.makeText(mContext,"USBデバイスを認識", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     //ボタン押下
     @JavascriptInterface
     public void pushButtonInSettingMode(String id){
         Toast.makeText(mContext, "ボタン"+ id +"の設定を開始します", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "ボタン"+ id +"を押してください", Toast.LENGTH_SHORT).show();
 
-        //赤外線の受信モードON
-        //受信モードで待機
-        if(irrcUsbDriver.isReady()) {
-            Toast.makeText(mContext,"USBデバイスを認識", Toast.LENGTH_SHORT).show();
+        final String key = id;
 
-            irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
-                @Override
-                public void onIrrcResponse(byte[] data) {
-                    irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
-                        @Override
-                        public void onIrrcResponse(byte[] data) {
+        irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
+            @Override
+            public void onIrrcResponse(byte[] data) {
+                irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
+                    @Override
+                    public void onIrrcResponse(byte[] data) {
+
+                        if(data != null) {
                             Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
-                            irrcUsbDriver.endReceiveIr(null);
-                        }
-                    }, 5000);
-                }
-            });
-        }
-        else {
-            Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
 
-        }
+                            //データをプット
+                            ((RemoconApplication) ((Activity) (mContext)).getApplication()).putObject(key, data.toString());
+                        }
+
+                        irrcUsbDriver.endReceiveIr(null);
+                    }
+                }, 5000);
+            }
+        });
 
     }
 

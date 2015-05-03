@@ -1,4 +1,4 @@
-package com.fujitsu.jp.komoachi;
+package com.fujitsu.jp.komachi;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

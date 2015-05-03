@@ -1,4 +1,4 @@
-package com.fujitsu.jp.komoachi;
+package com.fujitsu.jp.komachi;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,11 +34,11 @@ public class WebViewFragment extends Fragment implements RemoconConst {
      * @return A new instance of fragment WebViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WebViewFragment newInstance( String url, IrrcUsbDriver driver)  {
+    public static WebViewFragment newInstance(String url)  {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_URL, url);
 
+        args.putString(ARG_PARAM_URL, url);
 
         fragment.setArguments(args);
         return fragment;
@@ -56,7 +56,7 @@ public class WebViewFragment extends Fragment implements RemoconConst {
             url = getArguments().getString(ARG_PARAM_URL);
 
             //Driver作成
-            irrcUsbDriver = IrrcUsbDriver.init(getActivity(), ACTION_USB_PERMISSION);
+            irrcUsbDriver = ((RemoconApplication) getActivity().getApplication()).getIrrcUsbDriver(getActivity());
 
         }
     }

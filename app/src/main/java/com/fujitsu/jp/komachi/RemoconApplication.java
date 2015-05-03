@@ -1,4 +1,5 @@
-package com.fujitsu.jp.komoachi; /*******************************************************************************
+package com.fujitsu.jp.komachi;
+/*******************************************************************************
  * Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * Copyright (c) 2014- kotemaru@kotemaru.org
  ******************************************************************************/
@@ -9,8 +10,6 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.Application;
-
-import com.fujitsu.jp.komoachi.RemoconConst;
 
 /**
  * 汎用のオブジェクト保管庫を持つアプリケーション。
