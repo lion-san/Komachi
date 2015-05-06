@@ -20,10 +20,23 @@ public class WebViewJavascriptInterface {
 
     }
 
-    /** Show a toast from the web page */
+    /** Active Mode ====================*/
+
+    /**
+     * 赤外線データ送信処理
+     */
     @JavascriptInterface
-    public void pushButton(String toast) {
-        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    public void pushButton(String id) {
+        Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
+
+        //データをプット
+        byte[] data = (byte[])((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
+
+            if (irrcUsbDriver.isReady() == false || data == null) {
+                Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            irrcUsbDriver.sendData(data);
     }
 
     /** Setting Mode ====================*/
@@ -48,7 +61,6 @@ public class WebViewJavascriptInterface {
     //ボタン押下
     @JavascriptInterface
     public void pushButtonInSettingMode(String id){
-        Toast.makeText(mContext, "ボタン"+ id +"の設定を開始します", Toast.LENGTH_SHORT).show();
         Toast.makeText(mContext, "ボタン"+ id +"を押してください", Toast.LENGTH_SHORT).show();
 
         final String key = id;
@@ -64,7 +76,7 @@ public class WebViewJavascriptInterface {
                             Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
 
                             //データをプット
-                            ((RemoconApplication) ((Activity) (mContext)).getApplication()).putObject(key, data.toString());
+                            ((RemoconApplication) ((Activity) (mContext)).getApplication()).putObject(key, data);
                         }
 
                         irrcUsbDriver.endReceiveIr(null);
