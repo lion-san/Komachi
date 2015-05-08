@@ -36,6 +36,10 @@ public class RemoconApplication extends Application implements RemoconConst {
 		return saveObjects.remove(key);
 	}
 
+    public Map getSaveObjects(){
+        return saveObjects;
+    }
+
 	public IrrcUsbDriver getIrrcUsbDriver(Activity activity) {
 		if (irrcUsbDriver == null) {
 			irrcUsbDriver = IrrcUsbDriver.init(activity, ACTION_USB_PERMISSION);

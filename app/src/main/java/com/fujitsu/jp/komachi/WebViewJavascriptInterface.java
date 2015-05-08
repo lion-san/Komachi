@@ -5,6 +5,9 @@ import android.content.Context;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Created by yokoi on 2015/05/02.
  */
@@ -95,6 +98,40 @@ public class WebViewJavascriptInterface {
     @JavascriptInterface
     public void settingSave(){
         Toast.makeText(mContext, "リモコンの設定を保存します", Toast.LENGTH_SHORT).show();
+
+        //JSONの作成
+        Map map =
+        ((RemoconApplication) ((Activity) (mContext)).getApplication()).getSaveObjects();
+
+        String json = "[";
+        String btn;
+
+        for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry)it.next();
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+
+            btn = "{\"" + key.toString() + "\":\"" + value.toString() + "\"}";
+            json += btn;
+
+            if(it.hasNext()){
+                json += ",";
+            }
+        }
+
+        json += "]";
+
+
+        //WebAPI保存
+        SendHttpRequest http = new SendHttpRequest();
+        if(http.saveRemocon(json)){
+            Toast.makeText(mContext, "保存しました", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(mContext, "保存に失敗しました", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 
