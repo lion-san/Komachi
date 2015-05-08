@@ -103,24 +103,26 @@ public class WebViewJavascriptInterface {
         Map map =
         ((RemoconApplication) ((Activity) (mContext)).getApplication()).getSaveObjects();
 
-        String json = "[";
-        String btn;
+        String json = "{\"maker\":\"SONY\", \"buttons\":[";
+       // String json = "[";
 
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry)it.next();
             Object key = entry.getKey();
             Object value = entry.getValue();
 
-            btn = "{\"" + key.toString() + "\":\"" + value.toString() + "\"}";
-            json += btn;
+            String btnId = "{\"btnId\":\"" + key.toString() + "\"";
+            String btnCode =  "\"btnCode\":\"" + value.toString() + "\"}";
+            //btn = "{\"" + key.toString() + "\":\"" + value.toString() + "\"}";
+            json += btnId + "," + btnCode;
 
             if(it.hasNext()){
                 json += ",";
             }
         }
 
-        json += "]";
-
+        json += "]}";
+        //json += "]";
 
         //WebAPI保存
         SendHttpRequest http = new SendHttpRequest();
