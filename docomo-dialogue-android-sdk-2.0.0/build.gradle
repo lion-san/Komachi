@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('docomo-dialogue-android-sdk-2.0.0.jar'))

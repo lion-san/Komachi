@@ -27,16 +27,22 @@ public class WebViewJavascriptInterface {
      */
     @JavascriptInterface
     public void pushButton(String id) {
-        Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
 
-        //データをプット
-        byte[] data = (byte[])((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
+        if(irrcUsbDriver.isReady()) {
+            Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
+
+            //データをプット
+            byte[] data = (byte[]) ((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
 
             if (irrcUsbDriver.isReady() == false || data == null) {
                 Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
                 return;
             }
             irrcUsbDriver.sendData(data);
+        }
+        else{
+            Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Setting Mode ====================*/

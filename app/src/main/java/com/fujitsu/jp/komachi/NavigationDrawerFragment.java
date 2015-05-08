@@ -1,5 +1,8 @@
 package com.fujitsu.jp.komachi;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -21,6 +24,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -248,12 +253,65 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+
+            try {
+                // インテント作成
+                Intent intent = new Intent(
+                        RecognizerIntent.ACTION_RECOGNIZE_SPEECH); // ACTION_WEB_SEARCH
+                intent.putExtra(
+                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(
+                        RecognizerIntent.EXTRA_PROMPT,
+                        "Let's say!"); // お好きな文字に変更できます
+
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);// 取得する結果の数
+
+                // インテント発行
+                startActivityForResult(intent, StaticParams.REQUEST_CODE);
+            } catch (ActivityNotFoundException e) {
+                // このインテントに応答できるアクティビティがインストールされていない場合
+                Toast.makeText(getActivity(),
+                        "ActivityNotFoundException", Toast.LENGTH_LONG).show();
+            }
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    // アクティビティ終了時に呼び出される
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 自分が投げたインテントであれば応答する
+        if (requestCode == StaticParams.REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+            String resultsString = "";
+
+            // 結果文字列リスト
+            ArrayList<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+
+            /*for (int i = 0; i< results.size(); i++) {
+                // ここでは、文字列が複数あった場合に結合しています
+                resultsString += results.get(i);
+            }*/
+            resultsString = results.get(0);
+
+            // トーストを使って結果を表示
+            Toast.makeText(getActivity(), resultsString, Toast.LENGTH_LONG).show();
+
+            //会話から実行
+            ((RemoconApplication) getActivity().getApplication())
+                    .getMainHandler((MainActivity)getActivity())
+                    .executeRobot( resultsString );
+
+
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 
     /**
      * Per the navigation drawer design guidelines, updates the action bar to show the global app

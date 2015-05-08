@@ -22,6 +22,7 @@ public class RemoconApplication extends Application implements RemoconConst {
 
 	private Map<String, Object> saveObjects = new HashMap<String, Object>();
 	private IrrcUsbDriver irrcUsbDriver;
+    private MainHandler handler;
 
 	public void putObject(String key, Object val) {
 		saveObjects.put(key, val);
@@ -41,5 +42,12 @@ public class RemoconApplication extends Application implements RemoconConst {
 		}
 		return irrcUsbDriver;
 	}
+
+    public MainHandler getMainHandler(MainActivity activity) {
+        if (handler == null) {
+            handler = new MainHandler(activity);
+        }
+        return handler;
+    }
 
 }

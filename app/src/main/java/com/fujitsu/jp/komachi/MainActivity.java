@@ -2,6 +2,7 @@ package com.fujitsu.jp.komachi;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -68,25 +69,13 @@ public class MainActivity extends ActionBarActivity
         //受信モードで待機
         if(irrcUsbDriver.isReady()) {
             Toast.makeText(this, "USBデバイスを認識", Toast.LENGTH_SHORT).show();
-
-            irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
-                @Override
-                public void onIrrcResponse(byte[] data) {
-                    irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
-                        @Override
-                        public void onIrrcResponse(byte[] data) {
-                            if(data != null) {
-                                info(data.toString());
-                            }
-                            irrcUsbDriver.endReceiveIr(null);
-                        }
-                    }, 5000);
-                }
-            });
         }
         else {
             Toast.makeText(this, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
         }
+
+        //=== komachi AI ================================;
+        ((RemoconApplication) getApplication()).getMainHandler(this);
 
 }
     /**
