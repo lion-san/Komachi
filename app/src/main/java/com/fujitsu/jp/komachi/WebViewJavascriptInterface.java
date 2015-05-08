@@ -40,7 +40,6 @@ public class WebViewJavascriptInterface {
     }
 
     /** Setting Mode ====================*/
-
     //設定開始
     @JavascriptInterface
     public void settingStart(){
@@ -55,7 +54,6 @@ public class WebViewJavascriptInterface {
         else {
             Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     //ボタン押下
@@ -92,4 +90,22 @@ public class WebViewJavascriptInterface {
     public void settingSave(){
         Toast.makeText(mContext, "リモコンの設定を保存します", Toast.LENGTH_SHORT).show();
     }
-}
+
+
+    /** Test Mode ====================*/
+    //ボタン押下
+    @JavascriptInterface
+    public void pushButtonInTestMode(String id){
+        Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
+
+        //データをプット
+        byte[] data = (byte[])((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
+
+        if (irrcUsbDriver.isReady() == false || data == null) {
+            Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        irrcUsbDriver.sendData(data);
+    }
+
+}//Class

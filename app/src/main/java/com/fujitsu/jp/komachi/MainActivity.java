@@ -176,7 +176,6 @@ public class MainActivity extends ActionBarActivity
         }*/
         switch(item.getItemId()){
             case R.id.action_settings:
-                Toast.makeText(this, "リモコンの初期設定を開始します", Toast.LENGTH_LONG).show();
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
