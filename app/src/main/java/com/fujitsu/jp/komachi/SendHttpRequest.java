@@ -16,14 +16,14 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by yokoi.shinya on 2015/01/19.
  */
-public class SendHttpRequest {
+public class SendHttpRequest implements WebServiceUrls {
 
     public String sendRequestToGarako(String projectId) {
 
         HttpClient httpClient = new DefaultHttpClient();
 
         //StringBuilder uri = new StringBuilder("http://ec2-54-65-250-88.ap-northeast-1.compute.amazonaws.com/python/querygyarako.py?foo=" + msg);
-        StringBuilder uri = new StringBuilder("https://limitless-sands-8750.herokuapp.com/projects/"+ projectId + "/events.json");
+        StringBuilder uri = new StringBuilder(ROBO_PAAS_URL + "/projects/"+ projectId + "/events.json");
         HttpGet request = new HttpGet(uri.toString());
 
         HttpResponse httpResponse = null;
@@ -58,7 +58,7 @@ public class SendHttpRequest {
         HttpClient httpClient = new DefaultHttpClient();
 
         //StringBuilder uri = new StringBuilder("http://ec2-54-65-250-88.ap-northeast-1.compute.amazonaws.com/python/querygyarako.py?foo=" + msg);
-        StringBuilder uri = new StringBuilder("https://limitless-sands-8750.herokuapp.com/projects.json");
+        StringBuilder uri = new StringBuilder(ROBO_PAAS_URL + "/projects.json");
         HttpGet request = new HttpGet(uri.toString());
 
         HttpResponse httpResponse = null;
@@ -93,7 +93,7 @@ public class SendHttpRequest {
         HttpClient httpClient = new DefaultHttpClient();
 
         //StringBuilder uri = new StringBuilder("http://ec2-54-65-250-88.ap-northeast-1.compute.amazonaws.com/python/querygyarako.py?foo=" + msg);
-        StringBuilder uri = new StringBuilder("http://10.0.2.2:3000/remocon/save");
+        StringBuilder uri = new StringBuilder(USER_MANAGEMENT_URL + "/remocons/save");
         HttpPost request = new HttpPost(uri.toString());
         HttpResponse httpResponse = null;
 
@@ -130,5 +130,93 @@ public class SendHttpRequest {
         }
 
         return false;
+    }
+
+    /**
+     * getRemocon
+     */
+    public String getRemocon(){
+
+        String json = "";
+
+        HttpClient httpClient = new DefaultHttpClient();
+
+        StringBuilder uri = new StringBuilder(USER_MANAGEMENT_URL + "/remocons/0000.json");
+
+        HttpGet request = new HttpGet(uri.toString());
+        HttpResponse httpResponse = null;
+
+
+
+        try {
+
+            httpResponse = httpClient.execute(request);
+
+            //レスポンスの処理
+            int status = httpResponse.getStatusLine().getStatusCode();
+
+            if (HttpStatus.SC_OK == status) {
+                try {
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    httpResponse.getEntity().writeTo(outputStream);
+                    json = outputStream.toString();
+                    return json;
+                } catch (Exception e) {
+                    Log.d("HttpSampleActivity", "Error");
+                }
+            } else {
+                Log.d("HttpSampleActivity", "Status" + status);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("HttpSampleActivity", "Error Execute");
+        }
+
+        return  json;
+
+    }
+
+    public boolean sendLog(String json){
+        HttpClient httpClient = new DefaultHttpClient();
+
+        StringBuilder uri = new StringBuilder(DEV_USER_MANAGEMENT_URL + "/logs");
+        HttpPost request = new HttpPost(uri.toString());
+        HttpResponse httpResponse = null;
+
+        try {
+            StringEntity params = new StringEntity(json);
+            request.addHeader("content-type", "application/json");
+            request.setHeader("Accept", "application/json");
+            request.setHeader("Content-Type", "application/json");
+
+            request.setEntity(params);
+
+            //request.setEntity(new ByteArrayEntity(json.toString().getBytes("UTF8")));
+
+            httpResponse = httpClient.execute(request);
+
+            //レスポンスの処理
+            int status = httpResponse.getStatusLine().getStatusCode();
+
+            if (HttpStatus.SC_OK == status) {
+                try {
+                    return true;
+                } catch (Exception e) {
+                    Log.d("HttpSampleActivity", "Error");
+
+                }
+            } else {
+                Log.d("HttpSampleActivity", "Status" + status);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("HttpSampleActivity", "Error Execute");
+        }
+
+        return false;
+
     }
 }

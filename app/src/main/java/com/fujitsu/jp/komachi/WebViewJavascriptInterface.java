@@ -41,6 +41,7 @@ public class WebViewJavascriptInterface {
                 Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            Log.sendLog("0000", "remocon", id, "");
             irrcUsbDriver.sendData(data);
         }
         else{

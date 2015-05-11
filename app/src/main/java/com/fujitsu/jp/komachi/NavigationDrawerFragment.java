@@ -302,6 +302,9 @@ public class NavigationDrawerFragment extends Fragment {
             // トーストを使って結果を表示
             Toast.makeText(getActivity(), resultsString, Toast.LENGTH_LONG).show();
 
+            //Logの取得
+            Log.sendLog("0000", "talk_to_komachi", resultsString, "");
+
             //会話から実行
             ((RemoconApplication) getActivity().getApplication())
                     .getMainHandler((MainActivity)getActivity())

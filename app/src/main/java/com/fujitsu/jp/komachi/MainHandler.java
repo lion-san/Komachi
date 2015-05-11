@@ -197,6 +197,24 @@ public class MainHandler implements TextToSpeech.OnInitListener, StaticParams{
 
                     this.setParam(resultsString);
 
+                    //リモコンのロード
+                    String remocon = http.getRemocon();
+                    JSONObject jsonObject = new JSONObject(remocon);
+                    JSONArray jsons = jsonObject.getJSONArray("buttons");
+
+                    //プロパティの取得
+                    String maker = jsonObject.getString("maker");
+
+                    RemoconApplication app =
+                    ((RemoconApplication) ((Activity) (mainActivity)).getApplication());
+
+                    for (int i = 0; i < jsons.length(); i++) {
+                        // リモコン情報を取得
+                        JSONObject btn = jsons.getJSONObject(i);
+                        //メモリ上にロード
+                       app.putObject(btn.getString("btnId"), btn.getString("btnCode").getBytes());
+                    }
+
                     progressBar.dismiss();//消去
 
                     return json_org;

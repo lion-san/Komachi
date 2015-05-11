@@ -64,6 +64,9 @@ public class ActionHandler {
 
     synchronized protected void analyzeJson( String resultsString, String json_org ){
 
+        //Logの取得
+        com.fujitsu.jp.komachi.Log.sendLog("0000", "robo_paas", resultsString, json_org);
+
         Boolean flg = false;
 
         try{
@@ -197,7 +200,12 @@ public class ActionHandler {
                 //雑談対話要求処理クラスにリクエストデータを渡し、レスポンスデータを取得する
                 resultData = dialogue.request(param1);
 
-                return resultData.getYomi();
+                String yomi = resultData.getYomi();
+
+                //Logの取得
+                com.fujitsu.jp.komachi.Log.sendLog("0000", "docomo_api", resultsString, yomi);
+
+                return yomi;
                 }
                 catch (Exception e){
                     e.printStackTrace();
