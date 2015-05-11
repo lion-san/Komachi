@@ -180,7 +180,7 @@ public class SendHttpRequest implements WebServiceUrls {
     public boolean sendLog(String json){
         HttpClient httpClient = new DefaultHttpClient();
 
-        StringBuilder uri = new StringBuilder(DEV_USER_MANAGEMENT_URL + "/logs");
+        StringBuilder uri = new StringBuilder(USER_MANAGEMENT_URL + "/logs");
         HttpPost request = new HttpPost(uri.toString());
         HttpResponse httpResponse = null;
 

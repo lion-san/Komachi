@@ -82,9 +82,9 @@ public class MainHandler implements TextToSpeech.OnInitListener, StaticParams{
         //holder.addCallback(surfaceHolderCallback);
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
+
         //TTSの初期化
         tts = new TextToSpeech(mainActivity.getApplicationContext(), this);
-
 
 
     }
@@ -323,6 +323,19 @@ public class MainHandler implements TextToSpeech.OnInitListener, StaticParams{
         task.execute( resultsString );
     }
 
+
+    /**
+     *
+     * @param param
+     */
+    synchronized public void doTalk( String param, boolean flg){
+
+        if(flg) {
+            tts.speak(param, TextToSpeech.QUEUE_ADD, null);
+        }
+        Toast.makeText(mainActivity, param, Toast.LENGTH_SHORT).show();
+
+    }
 
 //--------------------------------------------------------------------------------
 //--- Camera -----------------------------------------------------------------------------

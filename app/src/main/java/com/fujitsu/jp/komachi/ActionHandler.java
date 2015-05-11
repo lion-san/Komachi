@@ -241,7 +241,7 @@ public class ActionHandler {
     /**
      *
      * @param param
-     */
+    */
     synchronized private void doTalk( String param){
 
         tts.speak(param, TextToSpeech.QUEUE_ADD, null);

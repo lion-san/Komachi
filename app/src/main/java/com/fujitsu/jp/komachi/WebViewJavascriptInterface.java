@@ -15,11 +15,15 @@ public class WebViewJavascriptInterface {
 
     Context mContext;
     private IrrcUsbDriver irrcUsbDriver;
+    private RemoconApplication app;
 
     /** Instantiate the interface and set the context */
     WebViewJavascriptInterface(Context c, IrrcUsbDriver driver) {
         mContext = c;
         irrcUsbDriver = driver;
+
+        app =
+        (RemoconApplication) ((Activity) (mContext)).getApplication();
 
     }
 
@@ -35,7 +39,7 @@ public class WebViewJavascriptInterface {
             Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
 
             //データをプット
-            byte[] data = (byte[]) ((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
+            byte[] data = (byte[]) app.getObject(id);
 
             if (irrcUsbDriver.isReady() == false || data == null) {
                 Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
@@ -45,7 +49,8 @@ public class WebViewJavascriptInterface {
             irrcUsbDriver.sendData(data);
         }
         else{
-            Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
+
+            app.getMainHandler((MainActivity)mContext).doTalk("USBデバイスが見つかりません", false);
         }
     }
 
@@ -54,22 +59,22 @@ public class WebViewJavascriptInterface {
     @JavascriptInterface
     public void settingStart(){
 
-        Toast.makeText(mContext, "リモコンの設定を開始します", Toast.LENGTH_SHORT).show();
+        app.getMainHandler((MainActivity)mContext).doTalk("リモコンの設定を開始します", true);
 
         //赤外線の受信モードON
         //受信モードで待機
         if(irrcUsbDriver.isReady()) {
-            Toast.makeText(mContext,"USBデバイスを認識", Toast.LENGTH_SHORT).show();
+            app.getMainHandler((MainActivity)mContext).doTalk("USBデバイスを認識しました", false);
         }
         else {
-            Toast.makeText(mContext, "USBデバイスが見つかりません", Toast.LENGTH_SHORT).show();
+            app.getMainHandler((MainActivity)mContext).doTalk("USBデバイスが見つかりません", false);
         }
     }
 
     //ボタン押下
     @JavascriptInterface
     public void pushButtonInSettingMode(String id){
-        Toast.makeText(mContext, "ボタン"+ id +"を押してください", Toast.LENGTH_SHORT).show();
+        app.getMainHandler((MainActivity)mContext).doTalk("ボタン\"+ id +\"を押してください", true);
 
         final String key = id;
 
@@ -84,7 +89,7 @@ public class WebViewJavascriptInterface {
                             Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
 
                             //データをプット
-                            ((RemoconApplication) ((Activity) (mContext)).getApplication()).putObject(key, data);
+                            app.putObject(key, data);
                         }
 
                         irrcUsbDriver.endReceiveIr(null);
@@ -98,11 +103,11 @@ public class WebViewJavascriptInterface {
     //設定完了
     @JavascriptInterface
     public void settingSave(){
-        Toast.makeText(mContext, "リモコンの設定を保存します", Toast.LENGTH_SHORT).show();
+        app.getMainHandler((MainActivity)mContext).doTalk("リモコンの設定を保存します", true);
+
 
         //JSONの作成
-        Map map =
-        ((RemoconApplication) ((Activity) (mContext)).getApplication()).getSaveObjects();
+        Map map = app.getSaveObjects();
 
         String json = "{\"maker\":\"SONY\", \"buttons\":[";
        // String json = "[";
@@ -128,10 +133,10 @@ public class WebViewJavascriptInterface {
         //WebAPI保存
         SendHttpRequest http = new SendHttpRequest();
         if(http.saveRemocon(json)){
-            Toast.makeText(mContext, "保存しました", Toast.LENGTH_SHORT).show();
+            app.getMainHandler((MainActivity)mContext).doTalk("クラウドに保存しました", true);
         }
         else {
-            Toast.makeText(mContext, "保存に失敗しました", Toast.LENGTH_SHORT).show();
+            app.getMainHandler((MainActivity)mContext).doTalk("保存に失敗しました", true);
         }
 
 
@@ -145,7 +150,7 @@ public class WebViewJavascriptInterface {
         Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
 
         //データをプット
-        byte[] data = (byte[])((RemoconApplication) ((Activity) (mContext)).getApplication()).getObject(id);
+        byte[] data = (byte[])app.getObject(id);
 
         if (irrcUsbDriver.isReady() == false || data == null) {
             Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
