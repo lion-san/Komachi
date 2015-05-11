@@ -180,20 +180,20 @@ public class SendHttpRequest implements WebServiceUrls {
     public boolean sendLog(String json){
         HttpClient httpClient = new DefaultHttpClient();
 
-        StringBuilder uri = new StringBuilder(USER_MANAGEMENT_URL + "/logs");
+        StringBuilder uri = new StringBuilder(DEV_USER_MANAGEMENT_URL + "/logs");
         HttpPost request = new HttpPost(uri.toString());
        // request.setHeader("Content-Type", "text/plain; charset=UTF-8");
         HttpResponse httpResponse = null;
 
         try {
             StringEntity params = new StringEntity(json);
-            request.addHeader("content-type", "application/json");
-            request.setHeader("Accept", "application/json");
+            request.addHeader("content-type", "application/json; charset=UTF-8");
+            request.setHeader("Accept", "application/json; charset=UTF-8");
             request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
-            request.setEntity(params);
 
-            //request.setEntity(new ByteArrayEntity(json.toString().getBytes("UTF8")));
+            //文字コード変換（重要）
+            request.setEntity(new ByteArrayEntity(json.toString().getBytes("UTF8")));
 
             httpResponse = httpClient.execute(request);
 
