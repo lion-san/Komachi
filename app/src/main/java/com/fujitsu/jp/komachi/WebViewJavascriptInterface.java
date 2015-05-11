@@ -35,8 +35,6 @@ public class WebViewJavascriptInterface {
     @JavascriptInterface
     public void pushButton(String id) {
 
-        Log.sendLog("0000", "日本語", id, "");
-
         if(irrcUsbDriver.isReady()) {
             Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
 
