@@ -74,7 +74,7 @@ public class WebViewJavascriptInterface {
     //ボタン押下
     @JavascriptInterface
     public void pushButtonInSettingMode(String id){
-        app.getMainHandler((MainActivity)mContext).doTalk("ボタン\"+ id +\"を押してください", true);
+        app.getMainHandler((MainActivity)mContext).doTalk("ボタン"+ id +"を押してください", true);
 
         final String key = id;
 

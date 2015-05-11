@@ -182,13 +182,14 @@ public class SendHttpRequest implements WebServiceUrls {
 
         StringBuilder uri = new StringBuilder(USER_MANAGEMENT_URL + "/logs");
         HttpPost request = new HttpPost(uri.toString());
+       // request.setHeader("Content-Type", "text/plain; charset=UTF-8");
         HttpResponse httpResponse = null;
 
         try {
             StringEntity params = new StringEntity(json);
             request.addHeader("content-type", "application/json");
             request.setHeader("Accept", "application/json");
-            request.setHeader("Content-Type", "application/json");
+            request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
             request.setEntity(params);
 
