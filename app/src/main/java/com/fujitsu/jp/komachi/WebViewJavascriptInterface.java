@@ -5,6 +5,8 @@ import android.content.Context;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -102,24 +104,31 @@ public class WebViewJavascriptInterface {
 
     //設定完了
     @JavascriptInterface
-    public void settingSave(){
+    public void settingSave()  {
         app.getMainHandler((MainActivity)mContext).doTalk("リモコンの設定を保存します", true);
 
 
         //JSONの作成
         Map map = app.getSaveObjects();
+        String json = "";
 
-        String json = "{\"maker\":\"SONY\", \"buttons\":[";
+        json = "{\"maker\":\"SONY\", \"buttons\":[";
        // String json = "[";
 
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry)it.next();
-            Object key = entry.getKey();
-            Object value = entry.getValue();
 
+            //メモリ上からロード
+            Object key = entry.getKey();
+            byte[] value = (byte[])entry.getValue();
+
+            //KeyのJson化
             String btnId = "{\"btnId\":\"" + key.toString() + "\"";
-            String btnCode =  "\"btnCode\":\"" + value.toString() + "\"}";
-            //btn = "{\"" + key.toString() + "\":\"" + value.toString() + "\"}";
+
+            //ValueのJSON化(16進数に変換）
+            String btnCode = "\"btnCode\":\"" + Utility.bin2hex(value) + "\"}";
+
+
             json += btnId + "," + btnCode;
 
             if(it.hasNext()){
@@ -128,7 +137,6 @@ public class WebViewJavascriptInterface {
         }
 
         json += "]}";
-        //json += "]";
 
         //WebAPI保存
         SendHttpRequest http = new SendHttpRequest();

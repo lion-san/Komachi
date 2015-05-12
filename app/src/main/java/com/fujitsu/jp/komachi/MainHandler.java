@@ -22,10 +22,12 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import org.apache.http.client.UserTokenHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -211,8 +213,9 @@ public class MainHandler implements TextToSpeech.OnInitListener, StaticParams{
                     for (int i = 0; i < jsons.length(); i++) {
                         // リモコン情報を取得
                         JSONObject btn = jsons.getJSONObject(i);
-                        //メモリ上にロード
-                       app.putObject(btn.getString("btnId"), btn.getString("btnCode").getBytes());
+
+                        //メモリ上にロード(16進数からバイト配列に変換)
+                       app.putObject(btn.getString("btnId"), Utility.hex2bin(btn.getString("btnCode")));
                     }
 
                     progressBar.dismiss();//消去

@@ -98,7 +98,8 @@ public class SendHttpRequest implements WebServiceUrls {
         HttpResponse httpResponse = null;
 
         try {
-            StringEntity params = new StringEntity(json);
+            ByteArrayEntity params = new ByteArrayEntity(json.getBytes());
+            //StringEntity params = new StringEntity(json);
             request.addHeader("content-type", "application/json");
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-Type", "application/json");
