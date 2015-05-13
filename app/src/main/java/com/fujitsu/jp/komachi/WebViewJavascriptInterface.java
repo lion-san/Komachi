@@ -38,17 +38,20 @@ public class WebViewJavascriptInterface {
     public void pushButton(String id) {
 
         if(irrcUsbDriver.isReady()) {
-            Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
 
             //データをプット
             byte[] data = (byte[]) app.getObject(id);
 
             if (irrcUsbDriver.isReady() == false || data == null) {
-                Toast.makeText(mContext, "Not ready.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "チャンネルが設定されてません", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.sendLog("0000", "remocon", id, "");
-            irrcUsbDriver.sendData(data);
+            else {
+                irrcUsbDriver.sendData(data);
+                Toast.makeText(mContext, id, Toast.LENGTH_SHORT).show();
+                Log.sendLog("0000", "remocon", id, "");
+            }
+
         }
         else{
 
@@ -82,7 +85,7 @@ public class WebViewJavascriptInterface {
 
         irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
             @Override
-            public void onIrrcResponse(byte[] data) { 
+            public void onIrrcResponse(byte[] data) {
                 irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
                     @Override
                     public void onIrrcResponse(byte[] data) {
