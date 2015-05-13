@@ -82,7 +82,7 @@ public class WebViewJavascriptInterface {
 
         irrcUsbDriver.startReceiveIr(new IrrcUsbDriver.IrrcResponseListener() {
             @Override
-            public void onIrrcResponse(byte[] data) {
+            public void onIrrcResponse(byte[] data) { 
                 irrcUsbDriver.getReceiveIrData(new IrrcUsbDriver.IrrcResponseListener() {
                     @Override
                     public void onIrrcResponse(byte[] data) {
